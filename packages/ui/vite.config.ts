@@ -20,18 +20,19 @@ export default defineConfig({
         config: true,
       },
 
-      // Precache the favicon (tiny, immediate). The 3.8 MB music
-      // track is NOT in this list — it's cached lazily on first
-      // playback via the runtimeCaching rule below, so the install
-      // footprint stays small and the track is still available
-      // offline after you first hear it.
-      includeAssets: ['favicon.svg'],
+      // Precache favicon + the sunset background tile + every SFX
+      // sample (all tiny and required on first interaction, so they
+      // must be available offline). The 3.8 MB music track is NOT in
+      // this list — it's cached lazily on first playback via the
+      // runtimeCaching rule below, so the install footprint stays
+      // small and the track is still available offline after you
+      // first hear it.
+      includeAssets: ['favicon.svg', 'sunset.avif', 'sfx/*.wav'],
 
       manifest: {
         name: 'Tetris',
         short_name: 'Tetris',
-        description:
-          'A Guideline-compliant Tetris built on a headless deterministic engine. Works offline.',
+        description: 'A Guideline-compliant Tetris built on a headless deterministic engine. Works offline.',
         theme_color: '#0b0d12',
         background_color: '#0b0d12',
         display: 'standalone',
@@ -41,8 +42,16 @@ export default defineConfig({
       },
 
       workbox: {
-        // Precache everything the build emits.
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
+        // Precache everything the build emits, including the .wav SFX
+        // bank and the .avif background tile so the entire game (UI +
+        // audio + art) is fully playable offline after first install.
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,wav,avif}'],
+
+        // Bump the per-file precache size cap so the build doesn't
+        // silently drop the slightly-bigger WAV samples (the largest
+        // is ~75 KB; the default cap is 2 MiB which is fine, but the
+        // explicit value documents the intent).
+        maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
 
         // Claim open tabs immediately when a new SW installs so the
         // auto-update actually lands without a second reload.

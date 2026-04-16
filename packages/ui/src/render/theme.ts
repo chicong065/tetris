@@ -54,17 +54,27 @@ export const PIECE_COLORS_DARK: Record<PieceKind, string> = {
   L: '#a85518',
 }
 
-/** Global UI colours, grid styling, and the pixel font stack. */
+/**
+ * Global UI colours, grid styling, and the pixel font stack.
+ *
+ * Values track the CSS token system in `index.css`:
+ *   `--paper`     → text + frame stroke
+ *   `--ink`       → grid/lineClearFlash backdrops for contrast
+ *   `--accent`    → highlighted text (combo / B2B)
+ *
+ * The playfield interior stays near-black so the bevelled blocks pop;
+ * it is the only dark surface in the otherwise sunset-hued UI.
+ */
 export const THEME = {
-  background: '#0a0a14',
-  panelBackground: '#000000',
-  panelBorder: '#ffffff',
-  gridLine: 'rgba(255, 255, 255, 0.11)',
-  gridBorder: '#ffffff',
-  text: '#ffffff',
-  textDim: '#a0a0b0',
-  accent: '#fce96a',
+  background: '#1a0a2e',
+  panelBackground: '#0f0820',
+  panelBorder: '#fff4e8',
+  gridLine: 'rgba(255, 194, 221, 0.14)',
+  gridBorder: '#fff4e8',
+  text: '#fff4e8',
+  textDim: '#ffc2dd',
+  accent: '#ffd99f',
   ghostAlpha: 0.35,
-  lineClearFlash: '#ffffff',
+  lineClearFlash: '#fff4e8',
   pixelFont: '"Press Start 2P", ui-monospace, monospace',
 } as const

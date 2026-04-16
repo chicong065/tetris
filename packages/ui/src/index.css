@@ -10,34 +10,65 @@
   font-family: 'Press Start 2P', ui-monospace, SFMono-Regular, Menlo, monospace;
   color-scheme: dark;
 
-  /* Base palette */
-  --bg: #0a0a14;
-  --fg: #ffffff;
-  --fg-dim: #a0a0b0;
-  --fg-mute: #1a1a2e;
-  --panel: #000000;
-  --border: #ffffff;
-  --accent: #fce96a;
-  --accent-hover: #ffff8d;
-  --accent-alt: #00e8f0;
-  --danger: #ff5070;
-  --overlay-bg: rgba(0, 0, 0, 0.72);
+  /*
+   * Sunset-sky palette. Each stop is sampled (median per row) from the
+   * actual `/sunset.avif` background tile at evenly spaced Y positions
+   * (4, 17, 28, 38, 50, 65, 80%) so panels, mode stripes, and titles
+   * draw from colors that actually exist in the sky behind them.
+   */
+  --sky-0: #10406f; /* deep blue-teal, top */
+  --sky-1: #564e9c; /* slate-violet */
+  --sky-2: #313f98; /* deep blue */
+  --sky-3: #953c97; /* magenta */
+  --sky-4: #eb4982; /* pink */
+  --sky-5: #f06479; /* coral */
+  --sky-6: #fad797; /* peach, bottom */
 
-  /* Piece palette (mirrors render/theme.ts). Shared across UI so mode
-     colors, section stripes, and title letters all pull from one source. */
-  --piece-i: #4de8f7;
-  --piece-o: #ffd834;
-  --piece-t: #c56bff;
-  --piece-s: #52e352;
-  --piece-z: #ff5070;
-  --piece-j: #5a80ff;
-  --piece-l: #ff9133;
+  /*
+   * Ink (hard outline on every text / panel edge) and highlight (the
+   * pink-lavender offset drop used under every chunky pixel glyph).
+   * `--paper` is a warm off-white that reads better than pure white
+   * over the saturated gradient.
+   */
+  --ink: #1a0a2e;
+  --ink-soft: #4a2670;
+  --paper: #fff4e8;
+  --highlight: #ffc2dd;
 
-  /* Mode palette (per-mode accents on the menu and settings sections). */
-  --mode-marathon: var(--piece-i);
-  --mode-sprint: var(--piece-s);
-  --mode-ultra: var(--piece-l);
-  --mode-zen: var(--piece-t);
+  /* Panel chrome: a dark purple fill over the gradient (≈90% alpha so
+     the sky shows through faintly) wrapped in an ink frame. */
+  --panel: rgba(34, 19, 47, 0.92);
+  --panel-border: var(--ink);
+  --panel-shadow: var(--highlight);
+
+  /*
+   * One palette only: sunset gradient stops + paper/ink + a single
+   * saturated hot pink for interactive accents. Every UI color is drawn
+   * from this pool — no cyan/yellow/green/orange/purple from the old
+   * piece-derived scheme; those live only on the canvas as Guideline
+   * tetromino colors.
+   *
+   * The hot-pink accent is denser than any gradient stop so it reads on
+   * both the bright cloud bands AND the dark info panel, which keeps a
+   * single accent working everywhere.
+   */
+  --fg: var(--paper);
+  --fg-dim: var(--highlight);
+  --fg-mute: rgba(26, 10, 46, 0.55);
+  --border: var(--paper);
+  --accent: #ff4f9e; /* hot pink: primary CTAs + highlights */
+  --accent-hover: var(--highlight);
+  --accent-alt: var(--sky-6); /* peach: links + hint keys */
+  --overlay-bg: rgba(26, 10, 46, 0.78);
+
+  /*
+   * Mode accents come straight from the sunset gradient stops so each
+   * mode row reads as "a slice of the sky" rather than a foreign hue.
+   */
+  --mode-marathon: var(--sky-3); /* magenta */
+  --mode-sprint: var(--sky-4); /* pink */
+  --mode-ultra: var(--sky-5); /* coral */
+  --mode-zen: var(--sky-6); /* peach */
 
   /* Spacing scale, 4px base. */
   --space-1: 4px;
@@ -83,7 +114,7 @@ body,
 }
 
 body {
-  background-color: #04040c;
+  background-color: var(--sky-0);
   color: var(--fg);
   font-family: 'Press Start 2P', ui-monospace, monospace;
   letter-spacing: 1px;
@@ -92,36 +123,53 @@ body {
 }
 
 /*
- * Retro starfield background, tileable 240×240 SVG with 35 pixel stars
- * at three brightness levels + plus-shape twinkles, overlaid with 1px
- * CRT scanlines at 5% alpha and two soft nebula gradient washes.
+ * Sunset-sky background. A single seamless pixel-art AVIF tile drawn
+ * at its natural resolution, repeated both ways so the sky is always
+ * textured no matter the viewport size. The tile is authored to cover
+ * the full vertical gradient (indigo top → peach bottom) with clouds,
+ * sparkles, and per-row Bayer dithering already baked in — no CSS
+ * gymnastics required. `image-rendering: pixelated` keeps every pixel
+ * hard-edged if the browser ever scales the tile.
  */
-body.bg-starfield {
-  background-color: #04040c;
-  background-image:
-    /* 1. Starfield, small stars as they were originally */
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' shape-rendering='crispEdges'><rect x='39' y='50' width='3' height='1' fill='%23ffffff'/><rect x='40' y='49' width='1' height='3' fill='%23ffffff'/><rect x='169' y='100' width='3' height='1' fill='%23ffffff'/><rect x='170' y='99' width='1' height='3' fill='%23ffffff'/><rect x='89' y='180' width='3' height='1' fill='%23ffffff'/><rect x='90' y='179' width='1' height='3' fill='%23ffffff'/><rect x='209' y='30' width='3' height='1' fill='%23ffffff'/><rect x='210' y='29' width='1' height='3' fill='%23ffffff'/><rect x='18' y='25' width='2' height='2' fill='%23ffffff'/><rect x='130' y='45' width='2' height='2' fill='%23ffffff'/><rect x='205' y='80' width='2' height='2' fill='%23ffffff'/><rect x='55' y='140' width='2' height='2' fill='%23ffffff'/><rect x='170' y='180' width='2' height='2' fill='%23ffffff'/><rect x='90' y='215' width='2' height='2' fill='%23ffffff'/><rect x='8' y='62' width='1' height='1' fill='%23d4d4ec'/><rect x='75' y='8' width='1' height='1' fill='%23d4d4ec'/><rect x='150' y='20' width='1' height='1' fill='%23d4d4ec'/><rect x='225' y='55' width='1' height='1' fill='%23d4d4ec'/><rect x='40' y='100' width='1' height='1' fill='%23d4d4ec'/><rect x='110' y='85' width='1' height='1' fill='%23d4d4ec'/><rect x='200' y='120' width='1' height='1' fill='%23d4d4ec'/><rect x='30' y='175' width='1' height='1' fill='%23d4d4ec'/><rect x='135' y='155' width='1' height='1' fill='%23d4d4ec'/><rect x='220' y='205' width='1' height='1' fill='%23d4d4ec'/><rect x='95' y='50' width='1' height='1' fill='%237c7c96'/><rect x='25' y='35' width='1' height='1' fill='%237c7c96'/><rect x='165' y='65' width='1' height='1' fill='%237c7c96'/><rect x='228' y='15' width='1' height='1' fill='%237c7c96'/><rect x='70' y='125' width='1' height='1' fill='%237c7c96'/><rect x='5' y='195' width='1' height='1' fill='%237c7c96'/><rect x='185' y='148' width='1' height='1' fill='%237c7c96'/><rect x='120' y='220' width='1' height='1' fill='%237c7c96'/><rect x='45' y='225' width='1' height='1' fill='%237c7c96'/><rect x='215' y='158' width='1' height='1' fill='%237c7c96'/><rect x='85' y='75' width='1' height='1' fill='%237c7c96'/><rect x='145' y='115' width='1' height='1' fill='%237c7c96'/><rect x='50' y='55' width='1' height='1' fill='%237c7c96'/><rect x='175' y='32' width='1' height='1' fill='%237c7c96'/><rect x='15' y='145' width='1' height='1' fill='%237c7c96'/></svg>"),
-    /* 2. Original CRT scanlines, 1px white horizontal stripes
-          every 4px at 5% opacity. The grid that was there before
-          options B and C existed. */
-    repeating-linear-gradient(
-        0deg,
-        rgba(255, 255, 255, 0) 0,
-        rgba(255, 255, 255, 0) 3px,
-        rgba(255, 255, 255, 0.05) 3px,
-        rgba(255, 255, 255, 0.05) 4px
-      ),
-    /* 3. Smooth nebula, cool purple, upper left */
-    radial-gradient(ellipse 70% 55% at 22% 28%, rgba(100, 50, 180, 0.32) 0%, rgba(4, 4, 12, 0) 70%),
-    /* 4. Smooth nebula, deep blue, lower right */
-    radial-gradient(ellipse 65% 60% at 82% 76%, rgba(50, 100, 200, 0.28) 0%, rgba(4, 4, 12, 0) 70%);
-  background-repeat: repeat, repeat, no-repeat, no-repeat;
-  background-size:
-    240px 240px,
-    auto,
-    100% 100%,
-    100% 100%;
+body.bg-sunset {
+  background-color: var(--sky-0);
+  background-image: url('/sunset.avif');
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: top left;
   background-attachment: fixed;
+  image-rendering: pixelated;
+}
+
+/*
+ * Chunky 3-layer pixel text: warm paper fill, a pink drop offset to
+ * the bottom-right, and a hard ink outline on every edge. Drop this
+ * class on any heading/number that needs to read as "pixel art" over
+ * the bright sunset gradient. Uses text-shadow stacks (not box-shadow)
+ * so it works on inline text and `text-align: center` content.
+ */
+.pixel-text {
+  color: var(--paper);
+  text-shadow:
+    2px 2px 0 var(--highlight),
+    /* pink offset */ 3px 3px 0 var(--ink),
+    /* corner of hard outline */ 2px 0 0 var(--ink),
+    /* right edge */ 0 2px 0 var(--ink),
+    /* bottom edge */ -1px 0 0 var(--ink),
+    /* left edge */ 0 -1px 0 var(--ink);
+  /* top edge */
+}
+
+/* Slightly smaller outline variant for secondary headings / stat values. */
+.pixel-text-sm {
+  color: var(--paper);
+  text-shadow:
+    1px 1px 0 var(--highlight),
+    2px 2px 0 var(--ink),
+    1px 0 0 var(--ink),
+    0 1px 0 var(--ink),
+    -1px 0 0 var(--ink),
+    0 -1px 0 var(--ink);
 }
 
 .app {
@@ -172,7 +220,7 @@ input:focus-visible {
   margin-top: var(--space-4);
   padding: 12px var(--space-5);
   background: var(--accent);
-  color: var(--panel);
+  color: var(--ink);
   border: var(--btn-border) solid var(--border);
   font-family: inherit;
   font-size: var(--font-md);

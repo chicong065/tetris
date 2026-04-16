@@ -52,8 +52,11 @@
 
 .hud-panel {
   position: absolute;
-  background: var(--panel);
-  border: var(--frame-outer) solid var(--border);
+  /* Same dark info-panel treatment as the menu/settings, so HUD labels
+     and stats read clearly against the sunset sky and feel part of the
+     same design system. */
+  background: rgba(26, 10, 46, 0.82);
+  border: var(--btn-border) solid var(--paper);
   box-sizing: border-box;
 }
 
@@ -69,7 +72,7 @@
   font-size: 10px;
   line-height: 10px;
   letter-spacing: 0;
-  color: var(--fg-dim);
+  color: var(--highlight);
   text-align: center;
   text-transform: uppercase;
   user-select: none;
@@ -127,7 +130,7 @@
   left: 6px;
   right: 6px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 244, 232, 0.35);
 }
 
 .stats-label {
@@ -136,7 +139,7 @@
   left: 0;
   right: 0;
   font-size: 7px;
-  color: var(--fg-dim);
+  color: var(--highlight);
 }
 
 .stats-value {
@@ -145,7 +148,7 @@
   left: 0;
   right: 0;
   font-size: 11px;
-  color: var(--fg);
+  color: var(--paper);
 }
 
 .stats-value.highlight {
@@ -198,7 +201,7 @@
   flex-direction: column;
   gap: var(--space-2);
   font-size: var(--font-md);
-  color: var(--fg);
+  color: var(--paper);
   margin-bottom: var(--space-1);
   letter-spacing: 1px;
 }
@@ -206,6 +209,7 @@
 .game-overlay-stats strong {
   color: var(--accent);
   font-weight: normal;
+  text-shadow: 1px 1px 0 var(--ink);
 }
 
 /* ───── Game Over panel ──────────────────────────────────────────── */
@@ -225,6 +229,7 @@
   padding: 4px var(--space-2);
   border: var(--btn-border) solid var(--accent-alt);
   background: var(--panel);
+  text-shadow: 1px 1px 0 var(--ink);
 }
 
 .game-over-score-block {
@@ -243,9 +248,17 @@
 .game-over-score-value {
   font-size: var(--font-xl);
   letter-spacing: 3px;
-  color: var(--accent);
-  text-shadow: 2px 2px 0 #000;
+  color: var(--paper);
   line-height: 1;
+  /* Full pixel-text treatment on the hero number so it reads like the
+     LAUNCH WEEK countdown numerals in the reference. */
+  text-shadow:
+    2px 2px 0 var(--highlight),
+    3px 3px 0 var(--ink),
+    2px 0 0 var(--ink),
+    0 2px 0 var(--ink),
+    -1px 0 0 var(--ink),
+    0 -1px 0 var(--ink);
 }
 
 .game-over-actions {

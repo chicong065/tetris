@@ -39,8 +39,8 @@ export function Settings({ onClose }: SettingsProps) {
   }
 
   return (
-    <div className="panel settings" role="dialog" aria-label="Settings">
-      <h2 className="panel-title">SETTINGS</h2>
+    <div className="settings" role="dialog" aria-label="Settings">
+      <h2 className="settings-title screen-title">SETTINGS</h2>
 
       <section className="settings-section settings-section-handling">
         <h3>HANDLING</h3>

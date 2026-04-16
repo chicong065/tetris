@@ -29,3 +29,6 @@ yarn-error.log*
 # OS
 .DS_Store
 Thumbs.db
+
+# Brainstorm session artifacts
+.superpowers/

@@ -1,38 +1,69 @@
 /*
  * Base utility classes shared across every panel and button in the app.
- * Each UI surface (menu, settings, overlays) layers its own structure
- * on top of these primitives so the 8-bit look stays consistent.
+ * The sunset theme treats every raised element as a dark-ink frame over
+ * the gradient sky, with a pink `--highlight` offset that makes it feel
+ * like a pixel decal pressed onto the scenery.
  */
 
-/* ───── Panel frame: 4px outer border + 2px inner border ─────────── */
+/* ───── Panel frame: thin paper outline + subtle dark fill ──────────
+ *
+ * Panels are *small* info chips (pause / game-over / sprint finish),
+ * not heavy chrome. They sit directly on the sunset sky; the thin
+ * paper outline + translucent ink fill mirrors the info modal at the
+ * bottom of the reference design.
+ */
 
 .panel {
-  background: var(--panel);
-  border: var(--frame-outer) solid var(--border);
+  background: rgba(26, 10, 46, 0.82);
+  border: var(--btn-border) solid var(--paper);
   position: relative;
   box-sizing: border-box;
 }
 
-.panel::before {
-  content: '';
-  position: absolute;
-  inset: 6px;
-  border: var(--frame-inner) solid var(--border);
-  pointer-events: none;
+/*
+ * Screen-level wordmark used by the Menu (TETRIS) and Settings
+ * (SETTINGS) titles. Same Press Start 2P + paper face + pink offset
+ * + ink outline recipe as the panel titles, just sized large so the
+ * pixels read clearly. Both screens use this rule at the same size,
+ * giving TETRIS and SETTINGS a matched, "broken" pixel-art look.
+ */
+.screen-title {
+  margin: 0;
+  font-family: 'Press Start 2P', ui-monospace, monospace;
+  font-size: 36px;
+  letter-spacing: 6px;
+  color: var(--paper);
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.1;
+  text-shadow:
+    3px 3px 0 var(--highlight),
+    5px 5px 0 var(--ink),
+    2px 0 0 var(--ink),
+    0 2px 0 var(--ink),
+    -2px 0 0 var(--ink),
+    0 -2px 0 var(--ink);
 }
 
 /*
- * Unified title treatment for every panel (SETTINGS, PAUSED, GAME OVER,
- * SPRINT CLEARED, TIME UP, etc.). The main TETRIS title uses bespoke
- * SVG block letters instead.
+ * Unified title treatment for every game-overlay panel (PAUSED,
+ * GAME OVER, SPRINT CLEARED, TIME UP, etc.). Distinct from the
+ * Bungee `.screen-title` so overlays keep their existing pixel-text
+ * language.
  */
 .panel-title {
   margin: 0;
   text-align: center;
   font-size: var(--font-xxl);
   letter-spacing: 6px;
-  color: var(--accent);
-  text-shadow: 3px 3px 0 #000;
+  color: var(--paper);
+  text-shadow:
+    2px 2px 0 var(--highlight),
+    3px 3px 0 var(--ink),
+    2px 0 0 var(--ink),
+    0 2px 0 var(--ink),
+    -1px 0 0 var(--ink),
+    0 -1px 0 var(--ink);
   padding: 4px 0 8px;
   line-height: 1;
   text-transform: uppercase;
@@ -46,7 +77,7 @@
   letter-spacing: 2px;
   text-transform: uppercase;
   padding: 12px 20px;
-  border: var(--btn-border) solid var(--border);
+  border: var(--btn-border) solid var(--paper);
   cursor: pointer;
   box-sizing: border-box;
   display: inline-flex;
@@ -61,7 +92,8 @@
 
 .btn-primary {
   background: var(--accent);
-  color: var(--panel);
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
 .btn-primary:hover,
@@ -70,9 +102,9 @@
 }
 
 .btn-secondary {
-  background: var(--panel);
-  color: var(--fg-dim);
-  border-color: var(--fg-dim);
+  background: rgba(26, 10, 46, 0.75);
+  color: var(--paper);
+  border-color: var(--paper);
 }
 
 .btn-secondary:hover,
@@ -82,9 +114,9 @@
 }
 
 .btn-ghost {
-  background: rgba(0, 0, 0, 0.85);
-  color: var(--fg-dim);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(26, 10, 46, 0.7);
+  color: var(--paper);
+  border-color: var(--paper);
   padding: 6px 12px;
   font-size: var(--font-sm);
 }

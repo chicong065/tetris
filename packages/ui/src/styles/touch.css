@@ -5,8 +5,8 @@
   justify-content: center;
   width: 100%;
   max-width: 480px;
-  background: var(--panel);
-  border: var(--frame-outer) solid var(--border);
+  background: transparent;
+  border: none;
 }
 
 .touch-controls button {
@@ -16,9 +16,9 @@
   font-size: var(--font-lg);
   letter-spacing: 1px;
   text-transform: uppercase;
-  background: var(--panel);
-  color: var(--fg);
-  border: var(--btn-border) solid var(--border);
+  background: rgba(26, 10, 46, 0.82);
+  color: var(--paper);
+  border: var(--btn-border) solid var(--paper);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -35,8 +35,9 @@
 
 .touch-controls button:active {
   background: var(--accent);
-  color: var(--panel);
+  color: var(--ink);
   transform: translate(2px, 2px);
+  text-shadow: none;
 }
 
 @media (max-width: 768px), (pointer: coarse) {

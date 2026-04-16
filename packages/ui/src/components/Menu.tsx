@@ -52,7 +52,7 @@ export function Menu({ onStart, onOpenSettings }: MenuProps) {
   const zenSubtitle = bestZen ? `BEST ${bestZen.lines} LINES` : 'ENDLESS'
 
   return (
-    <div className="panel menu" role="dialog" aria-label="Main menu">
+    <div className="menu" role="dialog" aria-label="Main menu">
       <TetrisTitle />
 
       <div className="menu-modes">
@@ -84,7 +84,9 @@ export function Menu({ onStart, onOpenSettings }: MenuProps) {
         />
       </div>
 
-      <KeyHintLegend />
+      <div className="menu-hint-pill">
+        <KeyHintLegend />
+      </div>
       <CreditFooter />
     </div>
   )
