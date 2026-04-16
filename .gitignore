@@ -1,0 +1,31 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+*.tsbuildinfo
+
+# Test output
+coverage
+
+# Local config / env
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor / IDE
+.vite
+.idea
+.vscode
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db

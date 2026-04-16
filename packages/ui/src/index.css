@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+@import url('@/styles/base.css');
+@import url('@/styles/game.css');
+@import url('@/styles/menu.css');
+@import url('@/styles/settings.css');
+@import url('@/styles/touch.css');
+
+:root {
+  font-family: 'Press Start 2P', ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: dark;
+
+  /* Base palette */
+  --bg: #0a0a14;
+  --fg: #ffffff;
+  --fg-dim: #a0a0b0;
+  --fg-mute: #1a1a2e;
+  --panel: #000000;
+  --border: #ffffff;
+  --accent: #fce96a;
+  --accent-hover: #ffff8d;
+  --accent-alt: #00e8f0;
+  --danger: #ff5070;
+  --overlay-bg: rgba(0, 0, 0, 0.72);
+
+  /* Piece palette (mirrors render/theme.ts). Shared across UI so mode
+     colors, section stripes, and title letters all pull from one source. */
+  --piece-i: #4de8f7;
+  --piece-o: #ffd834;
+  --piece-t: #c56bff;
+  --piece-s: #52e352;
+  --piece-z: #ff5070;
+  --piece-j: #5a80ff;
+  --piece-l: #ff9133;
+
+  /* Mode palette (per-mode accents on the menu and settings sections). */
+  --mode-marathon: var(--piece-i);
+  --mode-sprint: var(--piece-s);
+  --mode-ultra: var(--piece-l);
+  --mode-zen: var(--piece-t);
+
+  /* Spacing scale, 4px base. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+
+  /* Type scale, tuned for Press Start 2P multiples. */
+  --font-xs: 7px;
+  --font-sm: 9px;
+  --font-md: 10px;
+  --font-lg: 12px;
+  --font-xl: 20px;
+  --font-xxl: 28px;
+
+  /* Frame and border widths. */
+  --frame-outer: 4px;
+  --frame-inner: 2px;
+  --btn-border: 2px;
+  --stripe-width: 6px;
+
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  image-rendering: pixelated;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  background-color: #04040c;
+  color: var(--fg);
+  font-family: 'Press Start 2P', ui-monospace, monospace;
+  letter-spacing: 1px;
+  line-height: 1.6;
+  overflow: auto;
+}
+
+/*
+ * Retro starfield background, tileable 240×240 SVG with 35 pixel stars
+ * at three brightness levels + plus-shape twinkles, overlaid with 1px
+ * CRT scanlines at 5% alpha and two soft nebula gradient washes.
+ */
+body.bg-starfield {
+  background-color: #04040c;
+  background-image:
+    /* 1. Starfield, small stars as they were originally */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' shape-rendering='crispEdges'><rect x='39' y='50' width='3' height='1' fill='%23ffffff'/><rect x='40' y='49' width='1' height='3' fill='%23ffffff'/><rect x='169' y='100' width='3' height='1' fill='%23ffffff'/><rect x='170' y='99' width='1' height='3' fill='%23ffffff'/><rect x='89' y='180' width='3' height='1' fill='%23ffffff'/><rect x='90' y='179' width='1' height='3' fill='%23ffffff'/><rect x='209' y='30' width='3' height='1' fill='%23ffffff'/><rect x='210' y='29' width='1' height='3' fill='%23ffffff'/><rect x='18' y='25' width='2' height='2' fill='%23ffffff'/><rect x='130' y='45' width='2' height='2' fill='%23ffffff'/><rect x='205' y='80' width='2' height='2' fill='%23ffffff'/><rect x='55' y='140' width='2' height='2' fill='%23ffffff'/><rect x='170' y='180' width='2' height='2' fill='%23ffffff'/><rect x='90' y='215' width='2' height='2' fill='%23ffffff'/><rect x='8' y='62' width='1' height='1' fill='%23d4d4ec'/><rect x='75' y='8' width='1' height='1' fill='%23d4d4ec'/><rect x='150' y='20' width='1' height='1' fill='%23d4d4ec'/><rect x='225' y='55' width='1' height='1' fill='%23d4d4ec'/><rect x='40' y='100' width='1' height='1' fill='%23d4d4ec'/><rect x='110' y='85' width='1' height='1' fill='%23d4d4ec'/><rect x='200' y='120' width='1' height='1' fill='%23d4d4ec'/><rect x='30' y='175' width='1' height='1' fill='%23d4d4ec'/><rect x='135' y='155' width='1' height='1' fill='%23d4d4ec'/><rect x='220' y='205' width='1' height='1' fill='%23d4d4ec'/><rect x='95' y='50' width='1' height='1' fill='%237c7c96'/><rect x='25' y='35' width='1' height='1' fill='%237c7c96'/><rect x='165' y='65' width='1' height='1' fill='%237c7c96'/><rect x='228' y='15' width='1' height='1' fill='%237c7c96'/><rect x='70' y='125' width='1' height='1' fill='%237c7c96'/><rect x='5' y='195' width='1' height='1' fill='%237c7c96'/><rect x='185' y='148' width='1' height='1' fill='%237c7c96'/><rect x='120' y='220' width='1' height='1' fill='%237c7c96'/><rect x='45' y='225' width='1' height='1' fill='%237c7c96'/><rect x='215' y='158' width='1' height='1' fill='%237c7c96'/><rect x='85' y='75' width='1' height='1' fill='%237c7c96'/><rect x='145' y='115' width='1' height='1' fill='%237c7c96'/><rect x='50' y='55' width='1' height='1' fill='%237c7c96'/><rect x='175' y='32' width='1' height='1' fill='%237c7c96'/><rect x='15' y='145' width='1' height='1' fill='%237c7c96'/></svg>"),
+    /* 2. Original CRT scanlines, 1px white horizontal stripes
+          every 4px at 5% opacity. The grid that was there before
+          options B and C existed. */
+    repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0) 3px,
+        rgba(255, 255, 255, 0.05) 3px,
+        rgba(255, 255, 255, 0.05) 4px
+      ),
+    /* 3. Smooth nebula, cool purple, upper left */
+    radial-gradient(ellipse 70% 55% at 22% 28%, rgba(100, 50, 180, 0.32) 0%, rgba(4, 4, 12, 0) 70%),
+    /* 4. Smooth nebula, deep blue, lower right */
+    radial-gradient(ellipse 65% 60% at 82% 76%, rgba(50, 100, 200, 0.28) 0%, rgba(4, 4, 12, 0) 70%);
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+  background-size:
+    240px 240px,
+    auto,
+    100% 100%,
+    100% 100%;
+  background-attachment: fixed;
+}
+
+.app {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  overflow: hidden;
+}
+
+/* Focus outline: chunky and high-contrast, not the rounded browser default. */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  body::after {
+    display: none;
+  }
+}
+
+.error-boundary {
+  padding: 48px;
+  text-align: center;
+  color: var(--fg);
+  font-size: 12px;
+  line-height: 2;
+}
+
+.error-boundary h2 {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.error-boundary button {
+  margin-top: var(--space-4);
+  padding: 12px var(--space-5);
+  background: var(--accent);
+  color: var(--panel);
+  border: var(--btn-border) solid var(--border);
+  font-family: inherit;
+  font-size: var(--font-md);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.error-boundary button:hover,
+.error-boundary button:focus-visible {
+  background: var(--accent-hover);
+}
+
+.error-boundary button:active {
+  transform: translate(1px, 1px);
+}

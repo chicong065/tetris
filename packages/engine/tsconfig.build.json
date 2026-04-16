@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "incremental": false
+  },
+  "include": ["src"],
+  "exclude": ["src/__tests__", "**/*.test.ts", "dist", "node_modules"]
+}

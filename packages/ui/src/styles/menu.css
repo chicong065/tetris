@@ -1,0 +1,305 @@
+/*
+ * Main menu surface: a bevelled-block TETRIS title, a 5-row list (four
+ * game modes plus a neutral Settings row, all with colour-coded left
+ * stripes and matching min-heights), a keyboard legend, and an author
+ * credit footer. Panel frame and button primitives come from base.css.
+ */
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-6) var(--space-7);
+  width: 460px;
+  max-width: 100%;
+}
+
+/* ───── TETRIS title (pixel-art block letters) ───────────────────── */
+
+.menu-title {
+  margin: 0;
+  padding: var(--space-2) 0 var(--space-1);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.menu-title-letter {
+  display: block;
+  /* 36×42 viewBox (6×7 bitmap cells expanded to 6px bevelled blocks),
+     rendered at 1:1 CSS pixels so every bevel detail stays crisp. */
+  width: 36px;
+  height: 42px;
+  /* Two chunky stacked shadows: a soft offset-black for depth, then a
+     slim offset of the nebula purple used by the starfield for a CRT
+     halo. Both are hard-edged (drop-shadow 0-blur) so the retro pixel
+     look is preserved. */
+  filter: drop-shadow(3px 3px 0 #000) drop-shadow(5px 5px 0 rgba(100, 50, 180, 0.7));
+  image-rendering: pixelated;
+}
+
+/* ───── Mode list ────────────────────────────────────────────────── */
+
+.menu-modes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.menu-mode-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4) var(--space-3) 18px;
+  min-height: 64px;
+  font-family: inherit;
+  background: transparent;
+  color: var(--fg);
+  border: var(--btn-border) solid rgba(255, 255, 255, 0.18);
+  border-left-width: var(--stripe-width);
+  border-left-color: var(--mode-accent, var(--accent));
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.menu-mode-row:hover,
+.menu-mode-row:focus-visible {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--mode-accent, var(--accent));
+  border-left-color: var(--mode-accent, var(--accent));
+}
+
+.menu-mode-row:active {
+  transform: translate(1px, 1px);
+}
+
+.menu-mode-marathon {
+  --mode-accent: var(--mode-marathon);
+}
+.menu-mode-sprint {
+  --mode-accent: var(--mode-sprint);
+}
+.menu-mode-ultra {
+  --mode-accent: var(--mode-ultra);
+}
+.menu-mode-zen {
+  --mode-accent: var(--mode-zen);
+}
+
+.menu-mode-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.menu-mode-name {
+  font-size: var(--font-lg);
+  letter-spacing: 2px;
+  color: var(--mode-accent, var(--fg));
+  text-transform: uppercase;
+}
+
+.menu-mode-best {
+  font-size: var(--font-xs);
+  letter-spacing: 1px;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+}
+
+/* Marathon level picker, docked on the right of the row. */
+.menu-mode-level {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 10px;
+  font-size: var(--font-sm);
+  letter-spacing: 1px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.menu-mode-level-label {
+  color: var(--fg-dim);
+  letter-spacing: 1.5px;
+}
+
+.menu-mode-level-value {
+  display: inline-block;
+  min-width: 18px;
+  font-size: var(--font-lg);
+  color: var(--accent);
+  text-align: center;
+}
+
+.menu-mode-level-step {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--font-lg);
+  line-height: 1;
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+}
+
+.menu-mode-level-step:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--accent);
+}
+
+.menu-mode-level-step:active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+.menu-mode-level-step:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ───── Settings row ────────────────────────────────────────────── */
+
+/*
+ * Matches the mode-row visual pattern: left stripe + name + dim
+ * subtitle. Distinct from gameplay modes via a neutral fg-dim stripe
+ * so it doesn't compete visually with the colorful mode accents.
+ */
+.menu-options-row {
+  --mode-accent: var(--fg-dim);
+}
+
+.menu-options-row .menu-mode-name {
+  color: var(--fg-dim);
+}
+
+.menu-options-row:hover,
+.menu-options-row:focus-visible {
+  --mode-accent: var(--accent);
+}
+
+.menu-options-row:hover .menu-mode-name,
+.menu-options-row:focus-visible .menu-mode-name {
+  color: var(--accent);
+}
+
+/* ───── Key hint grid ────────────────────────────────────────────── */
+
+.menu-hint {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  justify-content: center;
+  align-items: center;
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-xs);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.menu-hint-label {
+  color: var(--fg-dim);
+  text-align: right;
+  padding-right: 2px;
+}
+
+.menu-hint-key {
+  color: var(--accent-alt);
+  text-align: left;
+  padding-left: 2px;
+  min-width: 40px;
+}
+
+.menu-hint-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-hint .pixel-arrow {
+  color: var(--accent-alt);
+  width: 7px;
+  height: 7px;
+}
+
+/* ───── Credit footer ────────────────────────────────────────────── */
+
+.menu-credit {
+  margin: 0;
+  text-align: center;
+  font-size: var(--font-xs);
+  letter-spacing: 2px;
+  color: var(--fg-dim);
+}
+
+.menu-credit a {
+  color: var(--accent-alt);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--accent-alt);
+  padding-bottom: 1px;
+}
+
+.menu-credit a:hover,
+.menu-credit a:focus-visible {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ───── NEW BEST ribbon (shared with overlays) ───────────────────── */
+
+.game-overlay-best {
+  font-size: var(--font-md);
+  letter-spacing: 3px;
+  color: var(--accent);
+  padding: 6px var(--space-3);
+  border: var(--btn-border) solid var(--accent);
+  background: var(--panel);
+  animation: pulseBlink 0.8s steps(2, start) infinite;
+}
+
+@keyframes pulseBlink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0.3;
+  }
+}
+
+/* ───── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 540px) {
+  .menu {
+    padding: var(--space-6) 18px 18px;
+    width: calc(100vw - 16px);
+    gap: var(--space-4);
+  }
+
+  .menu-title {
+    gap: 6px;
+  }
+
+  .menu-title-letter {
+    /* Mobile keeps 1:1 with the 36×42 viewBox so the bevel details
+       stay pixel-crisp without sub-pixel scaling. */
+    filter: drop-shadow(2px 2px 0 #000) drop-shadow(3px 3px 0 rgba(100, 50, 180, 0.7));
+  }
+
+  .menu-mode-row {
+    padding: var(--space-3) var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .menu-hint {
+    font-size: var(--font-xs);
+    max-width: 280px;
+  }
+}

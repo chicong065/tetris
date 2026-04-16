@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@engine/*": ["./src/*"]
+    },
+    "types": ["vitest/globals"]
+  },
+  "include": ["src"]
+}

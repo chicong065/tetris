@@ -1,0 +1,19 @@
+{
+  "name": "tetris-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter @tetris/ui dev",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "release": "bash packages/engine/scripts/publish.sh",
+    "test": "pnpm -r test:run"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0",
+    "oxlint-tsgolint": "^0.21.0"
+  }
+}

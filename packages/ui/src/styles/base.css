@@ -1,0 +1,106 @@
+/*
+ * Base utility classes shared across every panel and button in the app.
+ * Each UI surface (menu, settings, overlays) layers its own structure
+ * on top of these primitives so the 8-bit look stays consistent.
+ */
+
+/* ───── Panel frame: 4px outer border + 2px inner border ─────────── */
+
+.panel {
+  background: var(--panel);
+  border: var(--frame-outer) solid var(--border);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: var(--frame-inner) solid var(--border);
+  pointer-events: none;
+}
+
+/*
+ * Unified title treatment for every panel (SETTINGS, PAUSED, GAME OVER,
+ * SPRINT CLEARED, TIME UP, etc.). The main TETRIS title uses bespoke
+ * SVG block letters instead.
+ */
+.panel-title {
+  margin: 0;
+  text-align: center;
+  font-size: var(--font-xxl);
+  letter-spacing: 6px;
+  color: var(--accent);
+  text-shadow: 3px 3px 0 #000;
+  padding: 4px 0 8px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* ───── Button primitives ────────────────────────────────────────── */
+
+.btn {
+  font-family: inherit;
+  font-size: var(--font-md);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border: var(--btn-border) solid var(--border);
+  cursor: pointer;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.btn:active {
+  transform: translate(1px, 1px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--panel);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--accent-hover);
+}
+
+.btn-secondary {
+  background: var(--panel);
+  color: var(--fg-dim);
+  border-color: var(--fg-dim);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-ghost {
+  background: rgba(0, 0, 0, 0.85);
+  color: var(--fg-dim);
+  border-color: rgba(255, 255, 255, 0.35);
+  padding: 6px 12px;
+  font-size: var(--font-sm);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Pixel arrow icon shared by buttons (points left by default). */
+.pixel-arrow {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  color: currentColor;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}

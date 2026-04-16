@@ -1,0 +1,285 @@
+/*
+ * In-game surface. The HUD (Hold / Stats / Next) is HTML and the
+ * playfield is a single canvas, both composed at native pixel sizes
+ * inside `.game-stage`. The stage is uniformly scaled via a CSS
+ * transform so the design stays pixel-exact at the viewport's largest
+ * fitting size.
+ */
+
+.game {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+/* ───── Stage: scaled wrapper + native-pixel container ───────────── */
+
+.game-stage-wrapper {
+  position: relative;
+  width: calc(var(--stage-width) * var(--stage-scale, 1));
+  height: calc(var(--stage-height) * var(--stage-scale, 1));
+}
+
+.game-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--stage-width);
+  height: var(--stage-height);
+  transform: scale(var(--stage-scale, 1));
+  transform-origin: top left;
+}
+
+.game-canvas {
+  position: absolute;
+  display: block;
+  background: transparent;
+  /*
+   * Pixel-perfect scaling. The canvas draws at its intrinsic playfield
+   * size and is scaled by the stage transform, so nearest-neighbor
+   * keeps the blocks sharp at any viewport.
+   */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ───── HUD panel frame + label ──────────────────────────────────── */
+
+.hud-panel {
+  position: absolute;
+  background: var(--panel);
+  border: var(--frame-outer) solid var(--border);
+  box-sizing: border-box;
+}
+
+.hud-panel-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hud-label {
+  position: absolute;
+  font-family: 'Press Start 2P', ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 10px;
+  letter-spacing: 0;
+  color: var(--fg-dim);
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ───── Hold panel ───────────────────────────────────────────────── */
+
+.hold-preview {
+  position: absolute;
+}
+
+.piece-preview {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ───── Next panel ───────────────────────────────────────────────── */
+
+.next-slots {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.next-slot {
+  position: relative;
+}
+
+/* ───── Stats panel ──────────────────────────────────────────────── */
+
+.stats-rows {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stats-row {
+  position: relative;
+  text-align: center;
+  font-family: 'Press Start 2P', ui-monospace, monospace;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.stats-row + .stats-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 6px;
+  right: 6px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.stats-label {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  font-size: 7px;
+  color: var(--fg-dim);
+}
+
+.stats-value {
+  position: absolute;
+  top: 26px;
+  left: 0;
+  right: 0;
+  font-size: 11px;
+  color: var(--fg);
+}
+
+.stats-value.highlight {
+  color: var(--accent);
+}
+
+/* ───── Overlay backdrop ─────────────────────────────────────────── */
+
+.game-overlay {
+  position: absolute;
+  left: calc(var(--playfield-x) * var(--stage-scale, 1));
+  top: calc(var(--playfield-y) * var(--stage-scale, 1));
+  width: calc(var(--playfield-w) * var(--stage-scale, 1));
+  height: calc(var(--playfield-h) * var(--stage-scale, 1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay-bg);
+  color: var(--fg);
+  font-size: var(--font-md);
+  text-align: center;
+  z-index: 10;
+}
+
+.game-overlay-panel {
+  width: 284px;
+  padding: var(--space-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.game-overlay-panel .panel-title {
+  white-space: nowrap;
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
+.game-overlay .btn {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  font-size: var(--font-sm);
+  letter-spacing: 1px;
+}
+
+.game-overlay-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--font-md);
+  color: var(--fg);
+  margin-bottom: var(--space-1);
+  letter-spacing: 1px;
+}
+
+.game-overlay-stats strong {
+  color: var(--accent);
+  font-weight: normal;
+}
+
+/* ───── Game Over panel ──────────────────────────────────────────── */
+
+.game-over-ribbon {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.game-over-rank {
+  font-size: var(--font-sm);
+  letter-spacing: 2px;
+  color: var(--accent-alt);
+  padding: 4px var(--space-2);
+  border: var(--btn-border) solid var(--accent-alt);
+  background: var(--panel);
+}
+
+.game-over-score-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.game-over-score-label {
+  font-size: var(--font-xs);
+  letter-spacing: 3px;
+  color: var(--fg-dim);
+}
+
+.game-over-score-value {
+  font-size: var(--font-xl);
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-shadow: 2px 2px 0 #000;
+  line-height: 1;
+}
+
+.game-over-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* ───── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .game {
+    padding: var(--space-2);
+    gap: var(--space-3);
+  }
+
+  .game-overlay-panel {
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .game-overlay .btn {
+    min-width: 180px;
+    padding: 10px 16px;
+    font-size: var(--font-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .game {
+    padding: var(--space-1);
+  }
+
+  .game-overlay {
+    font-size: var(--font-sm);
+  }
+}

@@ -1,0 +1,212 @@
+/*
+ * Settings surface: handling / audio / accessibility sections, each with
+ * a color-coded left stripe (piece palette) and matching H3 heading.
+ * Panel frame, title, and action buttons come from base.css.
+ */
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-6) var(--space-7);
+  min-width: 440px;
+  max-width: 540px;
+  font-family: inherit;
+  font-size: var(--font-md);
+}
+
+.settings h3 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-md);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.settings h3::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: currentColor;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) 18px;
+  border: var(--btn-border) solid rgba(255, 255, 255, 0.18);
+  border-left-width: var(--stripe-width);
+}
+
+.settings-section-handling {
+  border-left-color: var(--mode-marathon);
+}
+.settings-section-handling h3 {
+  color: var(--mode-marathon);
+}
+
+.settings-section-audio {
+  border-left-color: var(--piece-o);
+}
+.settings-section-audio h3 {
+  color: var(--piece-o);
+}
+
+.settings-section-access {
+  border-left-color: var(--mode-zen);
+}
+.settings-section-access h3 {
+  color: var(--mode-zen);
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 56px;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-sm);
+}
+
+.settings-credit {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-xs);
+  letter-spacing: 1px;
+  color: var(--fg-dim);
+  line-height: 1.8;
+  text-align: center;
+}
+
+.settings-credit a {
+  color: var(--accent-alt);
+  text-decoration: none;
+}
+
+.settings-credit a:hover,
+.settings-credit a:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.settings-label {
+  color: var(--fg);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.settings-value {
+  font-family: inherit;
+  font-size: var(--font-md);
+  color: var(--accent);
+  text-align: right;
+  letter-spacing: 1px;
+}
+
+/* ───── Range input ──────────────────────────────────────────────── */
+
+.settings input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  background: var(--panel);
+  border: var(--btn-border) solid var(--border);
+  outline: none;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.settings input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 18px;
+  background: var(--accent);
+  border: var(--btn-border) solid var(--border);
+  cursor: pointer;
+}
+
+.settings input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 18px;
+  background: var(--accent);
+  border: var(--btn-border) solid var(--border);
+  cursor: pointer;
+  border-radius: 0;
+}
+
+/* ───── ON/OFF toggle ───────────────────────────────────────────── */
+
+.settings-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 18px;
+  border: var(--btn-border) solid var(--border);
+  box-sizing: border-box;
+}
+
+.settings-toggle-cell {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--font-sm);
+  letter-spacing: 2px;
+  background: var(--panel);
+  color: var(--fg-dim);
+  border: none;
+  cursor: pointer;
+}
+
+.settings-toggle-cell + .settings-toggle-cell {
+  border-left: var(--btn-border) solid var(--border);
+}
+
+.settings-toggle-cell.is-active {
+  background: var(--accent);
+  color: var(--panel);
+}
+
+.settings-toggle-cell:hover:not(.is-active) {
+  background: var(--fg-mute);
+  color: var(--fg);
+}
+
+/* ───── Action row ───────────────────────────────────────────────── */
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}
+
+.settings-actions .btn {
+  min-width: 160px;
+}
+
+/* ───── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .settings {
+    min-width: auto;
+    width: calc(100vw - 24px);
+    padding: var(--space-6) var(--space-4) var(--space-4);
+  }
+
+  .settings-row {
+    grid-template-columns: 100px 1fr 48px;
+    gap: var(--space-2);
+    font-size: var(--font-xs);
+  }
+
+  .settings-actions .btn {
+    min-width: 0;
+    flex: 1;
+  }
+}
